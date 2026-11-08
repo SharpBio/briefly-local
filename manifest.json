@@ -1,0 +1,91 @@
+{
+  "action": {
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png",
+      "64": "icon64.png",
+      "128": "icon128.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "static/background/index.js"
+  },
+  "content_scripts": [
+    {
+      "css": [],
+      "js": [
+        "notice.js"
+      ],
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://youtube.com/*",
+        "https://www.bilibili.com/video/*",
+        "https://www.bilibili.com/bangumi/*"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "css": [],
+      "js": [
+        "capture.js"
+      ],
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://youtube.com/*",
+        "https://www.bilibili.com/video/*",
+        "https://www.bilibili.com/bangumi/*"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "css": [],
+      "js": [
+        "theater.js"
+      ],
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://youtube.com/*",
+        "https://www.bilibili.com/video/*",
+        "https://www.bilibili.com/bangumi/*"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "default_locale": "en",
+  "description": "本地 AI 视频 / 网页精华：字幕采集 + 自有模型生成，可选云端语音识别（默认关闭）",
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "64": "icon64.png",
+    "128": "icon128.png"
+  },
+  "manifest_version": 3,
+  "name": "Briefly Local",
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage",
+    "scripting",
+    "notifications",
+    "unlimitedStorage"
+  ],
+  "version": "0.1.0",
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "resources": [
+        "bulb.png",
+        "brand-script.ttf"
+      ]
+    }
+  ]
+}

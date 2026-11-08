@@ -1,0 +1,10 @@
+{
+  "extDescription": {
+    "description": "扩展描述",
+    "message": "本地 AI 视频与网页精华摘要，支持自有模型与可选云端语音识别"
+  },
+  "extName": {
+    "description": "扩展名称",
+    "message": "Briefly Local"
+  }
+}

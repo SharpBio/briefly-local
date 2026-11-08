@@ -1,0 +1,10 @@
+{
+  "extDescription": {
+    "description": "Extension description",
+    "message": "Local AI video & webpage digests powered by your own model, with optional cloud speech recognition"
+  },
+  "extName": {
+    "description": "Extension name",
+    "message": "Briefly Local"
+  }
+}

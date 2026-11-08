@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Briefly Local · 设置</title>
+<link rel="stylesheet" href="local.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Briefly Local</h1>
+    <span class="sub">采集与生成由你自己掌控，云端语音识别默认关闭、按需开启</span>
+  </header>
+
+  <div class="card">
+    <h2>模型接口</h2>
+    <div class="presets" id="presets"></div>
+    <label for="baseUrl">OpenAI 兼容 Base URL</label>
+    <input id="baseUrl" placeholder="http://localhost:11434/v1" spellcheck="false">
+    <div class="hint">程序会请求 <code class="path">{baseUrl}/chat/completions</code>；填完整地址也可识别。</div>
+
+    <div class="row">
+      <div>
+        <label for="model">模型名</label>
+        <input id="model" placeholder="qwen2.5:7b" spellcheck="false">
+      </div>
+      <div>
+        <label for="apiKey">API Key（本地模型可留空）</label>
+        <input id="apiKey" type="password" placeholder="留空或粘贴密钥" spellcheck="false">
+      </div>
+    </div>
+
+    <div class="row3">
+      <div>
+        <label for="temperature">温度</label>
+        <input id="temperature" type="number" step="0.1" min="0" max="2">
+      </div>
+      <div>
+        <label for="chunkSize">每块字符数</label>
+        <input id="chunkSize" type="number" step="1000" min="2000">
+      </div>
+      <div>
+        <label for="maxChunks">最多分块数</label>
+        <input id="maxChunks" type="number" step="1" min="1" max="40">
+      </div>
+    </div>
+    <div class="hint">长稿会先分块提炼要点，再汇总成一篇精华；块数越多越慢、越费 token。</div>
+
+    <label for="prompt">输出结构提示词（决定精华版的样式与字段）</label>
+    <textarea id="prompt" rows="16"></textarea>
+    <div class="hint" style="margin-top:12px">
+      <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text);margin:0">
+        <input id="strictJson" type="checkbox"> 强制 JSON 输出
+      </label>
+      <span>：模型支持 response_format / json_object 时打开；接口报错就关掉，靠提示词约束。</span>
+    </div>
+
+    <div class="btnrow">
+      <button class="primary" id="save">保存设置</button>
+      <button id="test">测试连接</button>
+      <button id="reset">恢复默认</button>
+      <span class="status" id="status"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>语音识别</h2>
+    <div class="hint" style="margin:0 0 14px">默认停用。启用后，<b>只有在视频没有自带字幕</b>时才会从原视频页取音频并调用云端文件转写；识别结果会缓存下来，重新生成不会重复计费。音频会被上传到你在下面填写的服务商，请确认你接受这一点。</div>
+    <div class="row">
+      <div>
+        <label for="asr-enabled">启用</label>
+        <select id="asr-enabled">
+          <option value="false">停用（只用自带字幕 / 正文）</option>
+          <option value="true">启用（无字幕时识别音频）</option>
+        </select>
+      </div>
+      <div>
+        <label for="asr-model">模型</label>
+        <select id="asr-model"></select>
+      </div>
+    </div>
+    <label for="asr-baseUrl">接口地址</label>
+    <input id="asr-baseUrl" placeholder="https://dashscope.aliyuncs.com/api/v1" spellcheck="false">
+    <label for="asr-apiKey">API Key</label>
+    <input id="asr-apiKey" type="password" placeholder="留空或粘贴密钥" spellcheck="false" autocomplete="off">
+    <div class="row3">
+      <div>
+        <label for="asr-pollSeconds">轮询间隔（秒）</label>
+        <input id="asr-pollSeconds" type="number" min="2" max="60" step="1">
+      </div>
+      <div>
+        <label for="asr-maxWaitSeconds">最长等待（秒）</label>
+        <input id="asr-maxWaitSeconds" type="number" min="60" max="3600" step="10">
+      </div>
+      <div>
+        <label for="asr-maxAudioMB">音频大小上限（MB）</label>
+        <input id="asr-maxAudioMB" type="number" min="1" max="900" step="10">
+      </div>
+    </div>
+    <div class="btnrow">
+      <button id="test-asr">测试语音识别连接</button>
+      <span class="status" id="asr-status"></span>
+    </div>
+    <div class="hint">改动自动保存，也可以点上方「保存设置」一起保存。识别服务使用「上传凭证 → 直传 → 异步任务 → 轮询」的文件转写接口；需要支持该接口的服务商密钥。任务提交后中断会接着轮询，一般不用重来；确实要重新识别时，在结果页<b>按住 Shift 点「重新生成」</b>（会产生新费用）。</div>
+  </div>
+
+  <div class="card">
+    <h2>生成历史</h2>
+    <div class="hint">采集到的原文和生成结果都保存在浏览器扩展的本地存储里（不是磁盘文件），关掉标签页也不会丢。点标题可回看、重新生成、导出；删除会同时清掉该条的原文与结果。</div>
+    <div id="history" class="hist-list"></div>
+    <div class="btnrow">
+      <button id="clearHistory">清空历史</button>
+      <span class="status" id="histStatus"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>怎么用</h2>
+    <ul class="notes">
+      <li><b>输出样式</b>：结果页按结构化 JSON 渲染——概览 / 核心金句 / 本片亮点（原文金句中英对照 + 词汇注解，点时间戳跳回原片）/ 核心认知 / 关键数字 / 时间线 / 推荐书单 / 全文逐字稿；支持逐字稿搜索、复制、下载 Markdown、打印成 PDF。上方提示词可直接改字段。</li>
+      <li>在浏览器扩展页用「加载已解压的扩展程序」选择 <code class="path">briefly-local</code> 目录；首次安装会自动打开本页。</li>
+      <li>打开 YouTube / B站视频页或普通文章页，点扩展图标（或视频页的灯泡浮层）→ <b>生成精华版</b>，会自动采集字幕或正文并打开本地结果页。</li>
+      <li>结果页用你这里配置的模型生成中文精华，可复制、下载 Markdown、<b>保存为独立 HTML</b>、打印成 PDF、查看原始字幕。想长期留档，用「保存 .html」或「下载 .md」把内容落到磁盘；上方「生成历史」可随时找回之前的结果。</li>
+      <li>纯本地：先启动 Ollama（<code class="path">ollama serve</code>）并拉好模型；也可用 DeepSeek / SiliconFlow / 智谱等云 API，填 Key 即可。若本地模型返回 403 / CORS 错误，给 Ollama 设置 <code class="path">OLLAMA_ORIGINS=*</code> 后重启。</li>
+      <li>YouTube 字幕由本扩展在视频页里重新读取字幕轨并抓取，所以生成时<b>请保持原视频标签页打开</b>；B站字幕和网页正文会随采集直接带回。</li>
+      <li><b>没有自带字幕时</b>：默认会提示「没有可用文本」；在上面「语音识别」里启用并填好密钥后，会先从原视频页取音频，再上传到云端做文件转写，最后按同样的精华版样式生成（<b>原视频标签页必须保持打开</b>）。识别结果按条目缓存在本地，重新生成不会重复提交计费；任务提交后中断会接着轮询，不会重复扣费。B站可直接取音频流；YouTube 若音频流被签名保护且没有字幕轨，目前仍不支持。</li>
+      <li><code class="path">host_permissions</code> 保留 <code class="path">&lt;all_urls&gt;</code>，只为让任意模型地址和视频站点可连，想更严可自行收窄。</li>
+    </ul>
+  </div>
+</div>
+<script src="local-core.js"></script>
+<script src="asr-core.js"></script>
+<script src="local.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Briefly Local · 精华版</title>
+<link rel="stylesheet" href="result-style.css">
+<link rel="stylesheet" href="loading.css">
+</head>
+<body>
+<div class="app-shell result-shell has-motion brief-is-loading">
+  <!-- 生成进度层：卡片 + 骨架屏 -->
+  <div class="brief-loading-overlay" id="loadingOverlay">
+    <div class="brief-loading-content">
+      <div class="brief-loading-card">
+        <div class="brief-loading-brand">
+          <span class="brief-loading-brand-mark">Briefly</span>
+          <img class="brief-loading-logo" src="../mark.png" alt="Briefly">
+        </div>
+        <div class="brief-loading-source" id="loadingSource" title="">
+          <img class="brief-loading-source-icon" id="loadingSourceIcon" src="../bili.svg" alt="" aria-hidden="true">
+          <span class="brief-loading-source-title" id="loadingSourceTitle">正在读取视频信息…</span>
+          <span class="brief-loading-source-duration" id="loadingSourceDuration"></span>
+        </div>
+        <div class="brief-loading-copy">
+          <div class="brief-loading-main" id="loadingMain">正在生成精华版<span class="brief-loading-dots" id="loadingDots">..</span></div>
+          <div class="brief-loading-sub" id="loadingSub">正在准备内容，请稍候</div>
+        </div>
+        <div class="brief-loading-progress-wrap">
+          <div class="brief-loading-progress" id="loadingProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="brief-loading-progress-bar" id="loadingProgressBar" style="width:0%"></div>
+          </div>
+          <span class="brief-loading-progress-label" id="loadingProgressLabel">0%</span>
+        </div>
+        <div class="brief-notification-panel">
+          <button class="brief-notification-button" id="notifyBtn" type="button">生成完成后提醒我</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-page brief-placeholder" id="loadingPlaceholder" aria-hidden="true">
+    <div class="container">
+      <header class="report-header">
+        <div class="brief-skeleton brief-skeleton-title"></div>
+        <div class="brief-skeleton brief-skeleton-subtitle"></div>
+        <div class="brief-skeleton brief-skeleton-meta"></div>
+      </header>
+      <section class="brief-skeleton-section"></section>
+      <section class="brief-skeleton-section"></section>
+    </div>
+  </div>
+  <div class="result-shell-refined">
+    <header class="top-bar">
+      <a class="brand" href="local.html"><span class="brand-name">Briefly</span></a>
+      <div class="top-actions">
+        <span class="top-status" id="status"></span>
+        <button class="top-btn ghost" id="regen">重新生成</button>
+        <button class="top-btn ghost" id="copy">复制</button>
+        <button class="top-btn ghost" id="download">下载 .md</button>
+        <button class="top-btn ghost" id="saveHtml">保存 .html</button>
+        <button class="top-btn ghost" id="print">导出 PDF</button>
+        <button class="top-btn ghost" id="settings">模型设置</button>
+        <!-- 主操作按钮：运行时填入 sourceUrl -->
+        <a class="top-btn primary no-pdf-export" id="openSource" href="about:blank" target="_blank" rel="noreferrer" title="打开原视频" style="display:none"><span id="openSourceLabel">打开原视频</span> <span class="top-btn-arrow">↗</span></a>
+      </div>
+    </header>
+
+    <div class="page-shell result-export-root">
+      <div id="heroSlot"></div>
+      <div class="page-grid">
+        <aside class="sidebar">
+          <nav class="toc">
+            <p class="toc-eyebrow">本期目录</p>
+            <div class="toc-list" id="toc"></div>
+          </nav>
+        </aside>
+        <main class="content" id="content"><p class="empty-note">正在等待采集内容…</p></main>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="local-core.js"></script>
+<script src="asr-core.js"></script>
+<script src="result.js"></script>
+</body>
+</html>

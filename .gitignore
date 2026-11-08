@@ -1,0 +1,23 @@
+# 本地系统与编辑器产物
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+*.zip
+*.crx
+
+# 任何凭据、密钥、本地备份都不进仓库
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*_backup/
+*_backup*/
+*.backup
+*.backup-*
